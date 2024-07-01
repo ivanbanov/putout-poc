@@ -1,6 +1,6 @@
 module.exports.report = () => `Unexpected 'debugger' statement.`
 
-module.exports.fix = (path) => {
+module.exports.fix = () => {
   return ''
 }
 
@@ -9,7 +9,6 @@ module.exports.include = () => [
 ]
 
 module.exports.filter = (path) => {
-  console.log(path)
   return true
 }
 
