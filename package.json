@@ -1,0 +1,14 @@
+{
+  "name": "ivanbanov",
+  "version": "0.0.0",
+  "scripts": {
+    "lint": "eslint index.ts"
+  },
+  "dependencies": {
+    "@putout/eslint": "^3.5.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-putout": "^22.10.0",
+    "putout": "^35.36.1",
+    "typescript-eslint": "^7.14.1"
+  }
+}
