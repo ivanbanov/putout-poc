@@ -11,6 +11,9 @@ importers:
       '@putout/eslint':
         specifier: ^3.5.0
         version: 3.5.0
+      '@putout/plugin-putout':
+        specifier: ^20.10.0
+        version: 20.10.0(putout@35.36.1(typescript@5.5.2))
       eslint:
         specifier: ^8.57.0
         version: 8.57.0

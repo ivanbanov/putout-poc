@@ -1,33 +1,50 @@
-const putout = require('putout')
-const { types, generate, operator } = putout;
-const { StringLiteral } = types
-// const { replaceWith, setLiteralValue } = operator
 
-const getColorHexFromPath = (node) => {
-  const color = node.declarations[0].init.value
+const stringToHex = (value) => {
   const hex = {
     red: '#f00',
     green: '#0f0',
     blue: '#00f',
   }
 
-  return hex[color]
+  return hex[value]
+}
+
+const getLiteralValue = (path) => {
+  return path.type === 'TemplateLiteral'
+    ? path.quasis[0].value.raw
+    : path.value
 }
 
 module.exports.report = (path) => {
-  return `Replace color ${path.declarations[0].init.value} with ${getColorHexFromPath(path)}.`
+  const value = getLiteralValue(path.init)
+  return `Replace color ${value} with ${stringToHex(value)}.`
 }
 
 module.exports.include = () => [
-  'VariableDeclaration',
+  'VariableDeclarator',
 ]
 
 module.exports.filter = (path) => {
-  return !!getColorHexFromPath(path.node)
+  const variable = path.node.init
+  const isTemplateLiteral = variable.type === 'TemplateLiteral'
+  const isStringLiteral =
+    variable.type === 'Literal' &&
+    typeof variable.value === 'string'
+
+  const hex =
+    isTemplateLiteral
+    ?  stringToHex(variable.quasis[0].value.raw)
+    : isStringLiteral
+    ? stringToHex(variable.value)
+    : null
+
+  return !!hex
 }
 
 module.exports.fix = (path) => {
-  path.node.declarations[0].init = StringLiteral(getColorHexFromPath(path.node))
-  return generate(path.node).code
-}
+  const value = getLiteralValue(path.node.init)
 
+  return path.text.replace(
+    /([^*]*=\s+)("|'|`)[^*]*/,
+    `$1$2${stringToHex(value)}$2`)
+}
